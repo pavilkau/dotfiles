@@ -5,6 +5,7 @@
 	st = status
 	co = checkout
 	br = branch
+	cm = commit -m	
 	pf = push --force-with-lease
 	pup = push -u origin HEAD
 	pop = stash pop
