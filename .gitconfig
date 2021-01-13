@@ -1,0 +1,18 @@
+[user]
+	name = Paulius Vilkauskas
+	email = pauliusvilkauskas@gmail.com
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	pf = push --force-with-lease
+	pup = push -u origin HEAD
+	pop = stash pop
+	amend = commit --amend
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[core]
+	excludesfile = ~/.gitignore
