@@ -14,10 +14,10 @@ plugins=(git)
 alias zshrc="vim ~/.zshrc"
 alias rsp="bin/rspec"
 alias svcs="cd ~/vinted/svc-shipping"
-alias findport='function _fport(){lsof -n -i4TCP:$1 | grep LISTEN};_fport'
+alias findport="function _fport(){lsof -n -i4TCP:$1 | grep LISTEN};_fport"
 alias netspec="echo 'ENABLE_NETWORKING_IN_SPECS=true' >> ~/vinted/svc-shipping/.env.test"
-alias gitd='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
+alias gitd="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias cvim="nvim ~/.config/nvim/init.vim"
 
 
 

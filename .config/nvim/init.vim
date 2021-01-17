@@ -6,16 +6,30 @@ endif
 
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'morhetz/gruvbox'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
+syntax on
+colorscheme zenburn
+highlight LineNr cterm=none ctermbg=none ctermfg=Yellow
+highlight CursorLineNr ctermbg=none
 
-colorscheme gruvbox
-syntax enable
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
-set number
 set history=1000
+set clipboard=unnamedplus
+set number relativenumber
 
+set hlsearch
+set ignorecase
 
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
