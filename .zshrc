@@ -18,7 +18,7 @@ alias findport="function _fport(){lsof -n -i4TCP:$1 | grep LISTEN};_fport"
 alias netspec="echo 'ENABLE_NETWORKING_IN_SPECS=true' >> ~/vinted/svc-shipping/.env.test"
 alias gitd="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 alias cvim="nvim ~/.config/nvim/init.vim"
-
+alias v="nvim"
 
 
 source $ZSH/oh-my-zsh.sh
