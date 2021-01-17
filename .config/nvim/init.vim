@@ -43,7 +43,7 @@ let mapleader="\<SPACE>"
 nmap <Leader><S-s> :%s//g<Left><Left>
 nmap <Leader>s :%s//c<Left><Left>
 
-nnoremap <CR> :noh<CR><CR>
+nnoremap <silent> <CR> :noh<CR><CR>
 
 
 " Switch 0 to jump to the first char
@@ -65,3 +65,34 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 	map <C-k> <C-w>k
 	map <C-l> <C-w>l
 
+
+" <leader># Surround a word with #{ruby interpolation}
+nnoremap <leader># ciw#{<C-R>"}<ESC>
+vnoremap <leader># c#{<C-R>"}<ESC>
+
+" <leader>" Surround a word with "quotes"
+nnoremap <leader>" ciw"<C-R>""<ESC>
+vnoremap <leader>" c"<C-R>""<ESC>
+
+" <leader>' Surround a word with 'single quotes'
+nnoremap <leader>' ciw'<C-R>"'
+vnoremap <leader>' c'<C-R>"'<ESC>
+
+" <leader>) Surround a word with (parens)
+" The difference is in whether a space is put in
+nnoremap <leader>( ciw(<C-R>")<ESC>
+nnoremap <leader>) ciw(<C-R>")<ESC>
+vnoremap <leader>( c( <C-R>" )<ESC>
+vnoremap <leader>) c(<C-R>")<ESC>
+
+" <leader>[ Surround a word with [brackets]
+nnoremap <leader>] ciw[<C-R>"]<ESC>
+nnoremap <leader>[ ciw[<C-R>"]<ESC>
+vnoremap <leader>] c[ <C-R>" ]<ESC>
+vnoremap <leader>[ c[<C-R>"]<ESC>
+
+" <leader>{ Surround a word with {braces}
+nnoremap <leader>} ciw{<C-R>"}<ESC>
+nnoremap <leader>{ ciw{<C-R>"}<ESC>
+vnoremap <leader>} c{ <C-R>" }<ESC>
+vnoremap <leader>{ c{<C-R>"}<ESC>
