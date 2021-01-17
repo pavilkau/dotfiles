@@ -11,7 +11,7 @@ plugins=(git)
 
 
 # Aliases
-alias zshrc="vim ~/.zshrc"
+alias zshrc="nvim ~/.zshrc"
 alias rsp="bin/rspec"
 alias svcs="cd ~/vinted/svc-shipping"
 alias findport="function _fport(){lsof -n -i4TCP:$1 | grep LISTEN};_fport"
