@@ -14,10 +14,12 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 call plug#end()
 
-syntax on
 colorscheme zenburn
+
+syntax on
 highlight LineNr cterm=none ctermbg=none ctermfg=Yellow
 highlight CursorLineNr ctermbg=none
+highlight Normal cterm=none ctermbg=none
 
 set encoding=utf-8
 set fileencoding=utf-8
