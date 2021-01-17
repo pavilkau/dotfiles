@@ -6,9 +6,7 @@ export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 
 ZSH_THEME="simple"
 
-
 plugins=(git)
-
 
 # Aliases
 alias zshrc="nvim ~/.zshrc"
@@ -20,12 +18,9 @@ alias gitd="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 alias cvim="nvim ~/.config/nvim/init.vim"
 alias v="nvim"
 
-
 source $ZSH/oh-my-zsh.sh
 
-
 eval "$(rbenv init -)"
-
 
 dev-tools() {
   (cd "$DEVTOOLS_PATH" && bundle exec bin/dev-tools "$@")
