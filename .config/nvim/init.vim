@@ -12,6 +12,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
 call plug#end()
 
 colorscheme zenburn
@@ -50,9 +51,11 @@ nnoremap <silent> <CR> :noh<CR><CR>
 nnoremap 0 ^
 nnoremap ^ 0
 
-nnoremap <Leader>o :Files<CR>
+nnoremap <Leader>o :Files<CR> "Search all files
+nnoremap <Leader>p :GFiles<CR> "Respect .gitignore
 nnoremap <Leader>l :Lines<CR>
 nnoremap <Leader>r :Rg<CR>
+
 
 nnoremap <Leader>n :NERDTreeToggle<CR>
 " Exit Vim if NERDTree is the only window left.
@@ -96,3 +99,10 @@ nnoremap <leader>} ciw{<C-R>"}<ESC>
 nnoremap <leader>{ ciw{<C-R>"}<ESC>
 vnoremap <leader>} c{ <C-R>" }<ESC>
 vnoremap <leader>{ c{<C-R>"}<ESC>
+
+let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
