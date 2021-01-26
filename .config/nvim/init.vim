@@ -18,6 +18,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'kassio/neoterm'
 Plug 'vim-test/vim-test'
+Plug 'w0rp/ale'
 call plug#end()
 
 colorscheme seoul256
@@ -42,7 +43,7 @@ set number relativenumber
 set hlsearch
 set ignorecase
 
-set updatetime=100
+set updatetime=50
 
 setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
@@ -166,3 +167,12 @@ function! CloseWindowOrKillBuffer()
     quit
   endif
 endfunction
+
+" Set specific linters
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'ruby': ['rubocop'],
+\}
+
+let g:ale_linters_explicit = 1
+let g:ale_sign_column_always = 1
