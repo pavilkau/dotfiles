@@ -13,9 +13,14 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
+Plug 'prettier/vim-prettier'
+Plug 'tomtom/tcomment_vim'
+Plug 'junegunn/seoul256.vim'
+Plug 'kassio/neoterm'
+Plug 'vim-test/vim-test'
 call plug#end()
 
-colorscheme zenburn
+colorscheme seoul256
 
 syntax on
 highlight LineNr cterm=none ctermbg=none ctermfg=Yellow
@@ -39,36 +44,65 @@ set ignorecase
 
 set updatetime=100
 
+setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
+set nocompatible
+filetype off
+
+let &runtimepath.=',~/.vim/bundle/neoterm'
+
+filetype plugin on
+
 let mapleader="\<SPACE>"
 
 nmap <Leader><S-s> :%s//g<Left><Left>
 nmap <Leader>s :%s//c<Left><Left>
 
-nnoremap <silent> <CR> :noh<CR><CR>
+nnoremap <silent> <leader>/ :nohlsearch<CR>
 
-
-" Switch 0 to jump to the first char
-nnoremap 0 ^
-nnoremap ^ 0
-
-nnoremap <Leader>o :Files<CR> "Search all files
-nnoremap <Leader>p :GFiles<CR> "Respect .gitignore
+" Search binds
+nnoremap <Leader>o :Files<CR>
+nnoremap <Leader>p :GFiles<CR>
 nnoremap <Leader>l :Lines<CR>
 nnoremap <Leader>r :Rg<CR>
-
+vnoremap <Leader>f execute "Rg " . GetVisual()<CR>
 
 nnoremap <Leader>n :NERDTreeToggle<CR>
 " Exit Vim if NERDTree is the only window left.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
     \ quit | endif
 
+"Neoterm mappings
+tnoremap <Esc> <C-\><C-n>
+if has('terminal') || has('nvim')
+  let g:test#strategy = 'neoterm'
+  let g:neoterm_default_mod = 'rightbelow vertical'
+  nmap <silent> <leader><Esc> :Ttoggle<CR>
+endif
+
+nmap <silent> <Leader>tl :TestNearest<CR>
+nmap <silent> <Leader>tf :TestFile<CR>
+nmap <silent> <Leader>ta :TestSuite<CR>
+nmap <silent> <Leader>tr :TestLast<CR>
+
+
+"mappings
+" Switch 0 to jump to the first char
+nnoremap 0 ^
+nnoremap ^ 0
+
 " Shortcutting split navigation, saving a keypress:
-	map <C-h> <C-w>h
-	map <C-j> <C-w>j
-	map <C-k> <C-w>k
-	map <C-l> <C-w>l
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" Split from buffer list
+nnoremap <leader>vb :ls<cr>:vertical sb<space>
+nnoremap <leader>hb :ls<cr>:sb<space>
 
 
+" Surround binds
 " <leader># Surround a word with #{ruby interpolation}
 nnoremap <leader># ciw#{<C-R>"}<ESC>
 vnoremap <leader># c#{<C-R>"}<ESC>
@@ -100,9 +134,35 @@ nnoremap <leader>{ ciw{<C-R>"}<ESC>
 vnoremap <leader>} c{ <C-R>" }<ESC>
 vnoremap <leader>{ c{<C-R>"}<ESC>
 
+
+" w!! to write a file as sudo
+cmap w!! w !sudo tee % >/dev/null
+
+
+nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
 let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
 
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
+
+function! CloseWindowOrKillBuffer()
+  let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
+  let number_of_buffers = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+  " We should never bdelete a nerd tree
+  if matchstr(expand("%"), 'NERD') == 'NERD'
+    wincmd c
+    return
+  endif
+
+  if number_of_windows_to_this_buffer > 1
+    wincmd c
+  elseif number_of_buffers > 1
+    bdelete!
+  else
+    quit
+  endif
+endfunction
