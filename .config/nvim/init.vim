@@ -7,7 +7,6 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/nerdtree'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -19,14 +18,17 @@ Plug 'junegunn/seoul256.vim'
 Plug 'kassio/neoterm'
 Plug 'vim-test/vim-test'
 Plug 'w0rp/ale'
+Plug 'tpope/vim-rails'
+Plug 'preservim/nerdtree'
 call plug#end()
 
 colorscheme seoul256
 
 syntax on
+highlight Normal ctermbg=NONE
+highlight nonText ctermbg=NONE
 highlight LineNr cterm=none ctermbg=none ctermfg=Yellow
 highlight CursorLineNr ctermbg=none
-highlight Normal ctermbg=none
 highlight Visual cterm=none ctermbg=darkgrey ctermfg=cyan
 
 highlight GitGutterAdd    guifg=#00ff00 ctermfg=28
@@ -39,6 +41,13 @@ set fileencodings=utf-8
 set history=1000
 set clipboard=unnamedplus
 set number relativenumber
+
+set mouse=a
+
+set autoread
+set nowrap
+
+set scrolloff=8
 
 set hlsearch
 set ignorecase
@@ -80,6 +89,9 @@ if has('terminal') || has('nvim')
   let g:neoterm_default_mod = 'rightbelow vertical'
   nmap <silent> <leader><Esc> :Ttoggle<CR>
 endif
+
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
 
 nmap <silent> <Leader>tl :TestNearest<CR>
 nmap <silent> <Leader>tf :TestFile<CR>
@@ -135,12 +147,7 @@ nnoremap <leader>{ ciw{<C-R>"}<ESC>
 vnoremap <leader>} c{ <C-R>" }<ESC>
 vnoremap <leader>{ c{<C-R>"}<ESC>
 
-
-" w!! to write a file as sudo
-cmap w!! w !sudo tee % >/dev/null
-
-
-nnoremap <silent> Q :call CloseWindowOrKillBuffer()<CR>
+nnoremap <silent> <C-q> :call CloseWindowOrKillBuffer()<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
@@ -149,6 +156,8 @@ let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
+
+let g:fzf_layout = { 'down': '~40%' }
 
 function! CloseWindowOrKillBuffer()
   let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
