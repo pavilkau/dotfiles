@@ -20,20 +20,37 @@ Plug 'vim-test/vim-test'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-rails'
 Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
+syntax on
+set termguicolors
 colorscheme seoul256
 
-syntax on
-highlight Normal ctermbg=NONE
-highlight nonText ctermbg=NONE
-highlight LineNr cterm=none ctermbg=none ctermfg=Yellow
-highlight CursorLineNr ctermbg=none
-highlight Visual cterm=none ctermbg=darkgrey ctermfg=cyan
+highlight Normal guibg=#333333
+highlight nonText guibg=#333333
+highlight LineNr  guibg=#3b3b3b ctermfg=Yellow
+highlight CursorLineNr guibg=#333333
+highlight SignColumn guibg=#3b3b3b
+highlight GitGutterAdd    guibg=#3b3b3b guifg=#00aa00 ctermfg=28
+highlight GitGutterChange guibg=#3b3b3b guifg=#bbbb00 ctermfg=3
+highlight GitGutterDelete guibg=#3b3b3b guifg=#ff1111 ctermfg=160
 
-highlight GitGutterAdd    guifg=#00ff00 ctermfg=28
-highlight GitGutterChange guifg=#bbbb00 ctermfg=3
-highlight GitGutterDelete guifg=#ff1111 ctermfg=160
+" Background colors for active vs inactive windows
+highlight InactiveWindow guibg=#333333
+highlight ActiveWindow guibg=#303030
+
+" Call method on window enter
+augroup WindowManagement
+  autocmd!
+  autocmd BufWinEnter,WinEnter * call Handle_Win_Enter()
+augroup END
+
+" Change highlight group of terminal window
+function! Handle_Win_Enter()
+    setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
+endfunction
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -42,22 +59,23 @@ set history=1000
 set clipboard=unnamedplus
 set number relativenumber
 
-set mouse=a
-
 set autoread
-set nowrap
-
 set scrolloff=8
 
 set hlsearch
 set ignorecase
-
 set updatetime=50
+set nocompatible
 
 setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
-set nocompatible
 filetype off
+
+" Airline config
+let g:airline_section_y = ''
+let g:airline_section_b = ''
+let g:airline_section_x = ''
+let g:airline_skip_empty_sections = 1
 
 let &runtimepath.=',~/.vim/bundle/neoterm'
 
@@ -90,7 +108,6 @@ if has('terminal') || has('nvim')
   nmap <silent> <leader><Esc> :Ttoggle<CR>
 endif
 
-autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
 nmap <silent> <Leader>tl :TestNearest<CR>
