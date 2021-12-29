@@ -4,7 +4,6 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -12,7 +11,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
-Plug 'prettier/vim-prettier'
 Plug 'tomtom/tcomment_vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'kassio/neoterm'
@@ -20,37 +18,42 @@ Plug 'vim-test/vim-test'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-rails'
 Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-rhubarb'
+Plug 'mark-maxwell/vim-spec-split'
+Plug 'morhetz/gruvbox'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prettier/vim-prettier'
 call plug#end()
 
 syntax on
-set termguicolors
-colorscheme seoul256
+colorscheme gruvbox
 
-highlight Normal guibg=#333333
-highlight nonText guibg=#333333
 highlight LineNr  guibg=#3b3b3b ctermfg=Yellow
-highlight CursorLineNr guibg=#333333
-highlight SignColumn guibg=#3b3b3b
-highlight GitGutterAdd    guibg=#3b3b3b guifg=#00aa00 ctermfg=28
+highlight CursorLineNr ctermfg=Red
+highlight SignColumn ctermbg=none
+highlight GitGutterAdd    guibg=#3b3b3b guifg=#00aa00 ctermfg=40
 highlight GitGutterChange guibg=#3b3b3b guifg=#bbbb00 ctermfg=3
-highlight GitGutterDelete guibg=#3b3b3b guifg=#ff1111 ctermfg=160
+highlight GitGutterDelete guibg=#3b3b3b guifg=#ff1111 ctermfg=9
+highlight ColorColumn ctermbg=darkgrey guibg=lightgrey
 
-" Background colors for active vs inactive windows
-highlight InactiveWindow guibg=#333333
-highlight ActiveWindow guibg=#303030
+" Change embedded terminal colors
+let g:terminal_color_0  = '#2e3436'
+let g:terminal_color_1  = '#cc0000'
+let g:terminal_color_2  = '#4e9a06'
+let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#3465a4'
+let g:terminal_color_5  = '#75507b'
+let g:terminal_color_6  = '#0b939b'
+let g:terminal_color_7  = '#d3d7cf'
+let g:terminal_color_8  = '#555753'
+let g:terminal_color_9  = '#ef2929'
+let g:terminal_color_10 = '#8ae234'
+let g:terminal_color_11 = '#fce94f'
+let g:terminal_color_12 = '#729fcf'
+let g:terminal_color_13 = '#ad7fa8'
+let g:terminal_color_14 = '#00f5e9'
+let g:terminal_color_15 = '#eeeeec'
 
-" Call method on window enter
-augroup WindowManagement
-  autocmd!
-  autocmd BufWinEnter,WinEnter * call Handle_Win_Enter()
-augroup END
-
-" Change highlight group of terminal window
-function! Handle_Win_Enter()
-    setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
-endfunction
 
 set encoding=utf-8
 set fileencoding=utf-8
@@ -67,15 +70,12 @@ set ignorecase
 set updatetime=50
 set nocompatible
 
+set noswapfile
+set colorcolumn=80
+
 setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 filetype off
-
-" Airline config
-let g:airline_section_y = ''
-let g:airline_section_b = ''
-let g:airline_section_x = ''
-let g:airline_skip_empty_sections = 1
 
 let &runtimepath.=',~/.vim/bundle/neoterm'
 
@@ -83,22 +83,25 @@ filetype plugin on
 
 let mapleader="\<SPACE>"
 
-nmap <Leader><S-s> :%s//g<Left><Left>
-nmap <Leader>s :%s//c<Left><Left>
+nmap <Leader><S-s> :%s//gc<Left><Left><Left>
+nmap <Leader>s :s//g<Left><Left>
 
 nnoremap <silent> <leader>/ :nohlsearch<CR>
 
-" Search binds
-nnoremap <Leader>o :Files<CR>
-nnoremap <Leader>p :GFiles<CR>
-nnoremap <Leader>l :Lines<CR>
-nnoremap <Leader>r :Rg<CR>
-vnoremap <Leader>f execute "Rg " . GetVisual()<CR>
+imap jk <Esc>
+imap kj <Esc>
 
-nnoremap <Leader>n :NERDTreeToggle<CR>
-" Exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
+" Del all buffers but current
+map <leader>o :%bd\|e\|bd#<cr>
+
+" Search binds
+nnoremap <Leader>; :Files<CR>
+nnoremap <Leader>, :GFiles<CR>
+nnoremap <Leader>r :Rg<CR>
+
+nnoremap <Leader>n :NERDTreeFind<CR>
+
+nnoremap <silent> <Leader>p :call Vspec()<CR>
 
 "Neoterm mappings
 tnoremap <Esc> <C-\><C-n>
@@ -115,6 +118,9 @@ nmap <silent> <Leader>tf :TestFile<CR>
 nmap <silent> <Leader>ta :TestSuite<CR>
 nmap <silent> <Leader>tr :TestLast<CR>
 
+nmap <leader>gs :G<CR>
+nmap <leader>gh :diffget //2<CR>
+nmap <leader>gl :diffget //3<CR>
 
 "mappings
 " Switch 0 to jump to the first char
@@ -170,7 +176,6 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
 
 let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
@@ -193,6 +198,12 @@ function! CloseWindowOrKillBuffer()
     quit
   endif
 endfunction
+
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set colorcolumn=80
+    autocmd WinLeave * set colorcolumn=0
+augroup END
 
 " Set specific linters
 let g:ale_linters = {
