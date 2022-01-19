@@ -12,17 +12,15 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'tomtom/tcomment_vim'
-Plug 'junegunn/seoul256.vim'
 Plug 'kassio/neoterm'
 Plug 'vim-test/vim-test'
-Plug 'w0rp/ale'
 Plug 'tpope/vim-rails'
+Plug 'tpope/vim-endwise'
+Plug 'dense-analysis/ale'
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-rhubarb'
 Plug 'mark-maxwell/vim-spec-split'
 Plug 'morhetz/gruvbox'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prettier/vim-prettier'
 call plug#end()
 
 syntax on
@@ -82,7 +80,6 @@ let &runtimepath.=',~/.vim/bundle/neoterm'
 filetype plugin on
 
 let mapleader="\<SPACE>"
-
 nmap <Leader><S-s> :%s//gc<Left><Left><Left>
 nmap <Leader>s :s//g<Left><Left>
 
@@ -98,12 +95,11 @@ map <leader>o :%bd\|e\|bd#<cr>
 nnoremap <Leader>; :Files<CR>
 nnoremap <Leader>, :GFiles<CR>
 nnoremap <Leader>r :Rg<CR>
-
 nnoremap <Leader>n :NERDTreeFind<CR>
 
 nnoremap <silent> <Leader>p :call Vspec()<CR>
 
-"Neoterm mappings
+" Neoterm mappings
 tnoremap <Esc> <C-\><C-n>
 if has('terminal') || has('nvim')
   let g:test#strategy = 'neoterm'
@@ -112,17 +108,16 @@ if has('terminal') || has('nvim')
 endif
 
 autocmd BufLeave term://* stopinsert
-
 nmap <silent> <Leader>tl :TestNearest<CR>
 nmap <silent> <Leader>tf :TestFile<CR>
 nmap <silent> <Leader>ta :TestSuite<CR>
 nmap <silent> <Leader>tr :TestLast<CR>
 
+nmap <leader>gb :Git blame<CR>
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //2<CR>
 nmap <leader>gl :diffget //3<CR>
 
-"mappings
 " Switch 0 to jump to the first char
 nnoremap 0 ^
 nnoremap ^ 0
@@ -143,7 +138,7 @@ nnoremap <leader>hb :ls<cr>:sb<space>
 nnoremap <leader># ciw#{<C-R>"}<ESC>
 vnoremap <leader># c#{<C-R>"}<ESC>
 
-" <leader>" Surround a word with "quotes"
+" <leader>' Surround a word with 'quotes'
 nnoremap <leader>" ciw"<C-R>""<ESC>
 vnoremap <leader>" c"<C-R>""<ESC>
 
@@ -172,14 +167,24 @@ vnoremap <leader>{ c{<C-R>"}<ESC>
 
 nnoremap <silent> <C-q> :call CloseWindowOrKillBuffer()<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
 let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
-
 let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
 let g:fzf_layout = { 'down': '~40%' }
+
+
+" Set specific linters
+let g:ale_linters = {}
+let g:ale_linters['ruby'] = ['rubocop']
+let g:ale_ruby_rubocop_executable = 'bundle'
+
+let g:ale_linters_explicit = 1
+let g:ale_sign_column_always = 1
+let g:ale_lint_on_save = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
 
 function! CloseWindowOrKillBuffer()
   let number_of_windows_to_this_buffer = len(filter(range(1, winnr('$')), "winbufnr(v:val) == bufnr('%')"))
@@ -205,11 +210,3 @@ augroup BgHighlight
     autocmd WinLeave * set colorcolumn=0
 augroup END
 
-" Set specific linters
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'ruby': ['rubocop'],
-\}
-
-let g:ale_linters_explicit = 1
-let g:ale_sign_column_always = 1
