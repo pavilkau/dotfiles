@@ -6,3 +6,4 @@ Usage:
 - Download [stow](https://archlinux.org/packages/community/any/stow/)
 - Clone repo to home dir (`git clone git@github.com:pavilkau/dotfiles.git ~/.dotfiles`)
 - `cd .dotfiles && stow *` (stow will not override existing files unless used with `--adopt` flag)
+  - use `stow package_name` (e.g. `stow nvim`) to create a symlink for a single package)
