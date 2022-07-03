@@ -15,6 +15,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'kassio/neoterm'
 Plug 'vim-test/vim-test'
 Plug 'tpope/vim-rails'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'tpope/vim-endwise'
 Plug 'dense-analysis/ale'
 Plug 'preservim/nerdtree'
@@ -92,8 +93,8 @@ imap kj <Esc>
 map <leader>o :%bd\|e\|bd#<cr>
 
 " Search binds
-nnoremap <Leader>; :Files<CR>
-nnoremap <Leader>, :GFiles<CR>
+nnoremap <Leader>, :Files<CR>
+nnoremap <Leader>; :GFiles<CR>
 nnoremap <Leader>r :Rg<CR>
 nnoremap <Leader>n :NERDTreeFind<CR>
 
@@ -167,7 +168,7 @@ vnoremap <leader>{ c{<C-R>"}<ESC>
 
 nnoremap <silent> <C-q> :call CloseWindowOrKillBuffer()<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
-let g:rooter_patterns = ['.git', 'Makefile', 'app', 'nvim']
+let g:rooter_patterns = ['.git', '!^engines', 'app', 'Makefile', 'nvim']
 let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
