@@ -37,7 +37,6 @@ alias cfg="cd ~/.config"
 alias g="git"
 alias b="cd .."
 
-<<<<<<< Updated upstream
 # config bare repo git alias
 alias gdot='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
