@@ -1,15 +1,22 @@
 # Exports
-export ZSH="/home/pauliusv/.oh-my-zsh"
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export ZSH="$HOME/.oh-my-zsh"
+export CONFIG_PATH="$HOME/.config"
 export PATH="/usr/local/opt/elasticsearch@5.6/bin:$PATH"
 export LIBRARY_PATH="${LD_LIBRARY_PATH:+LD_LIBRARY_PATH:}/usr/local/opt/openssl/lib/"
-export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 export VIMCONF_PATH="$HOME/.config/nvim/init.vim"
-export CONFIG_PATH="$HOME/.config"
-export PATH="$HOME/.nodenv/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
 
-eval "$(nodenv init -)"
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+export PATH="$HOME/.nodenv/bin:$PATH"
+eval "$(nodenv init -)"
+
+# runcount=$(ps -ef | grep "ssh-agent" | grep -v "grep" | wc -l)
+# if [ $runcount -eq 0 ]; then
+#     eval $(ssh-agent -s) > /dev/null 2>&1
+#     ssh-add ~/.ssh/id_rsa
+# fi
 
 ZSH_THEME="simple"
 
@@ -21,13 +28,39 @@ alias zshrc="nvim ~/.zshrc"
 alias cvim="nvim $VIMCONF_PATH"
 alias cwm="nvim $CONFIG_PATH/bspwm/bspwmrc"
 
+alias be="bundle exec"
 alias rsp="bin/rspec"
 alias svcs="cd ~/vinted/svc-shipping"
+alias ints="cd ~/vinted/integrations"
 alias cfg="cd ~/.config"
 
-alias findport="function _fport(){lsof -n -i4TCP:$1 | grep LISTEN};_fport"
-alias netspec="echo 'ENABLE_NETWORKING_IN_SPECS=true' >> ~/vinted/svc-shipping/.env.test"
+alias g="git"
+alias b="cd .."
+
+# config bare repo git alias
+alias gdot='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 source $ZSH/oh-my-zsh.sh
 
+SSH_ENV="$HOME/.ssh/agent-environment"
 
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi

@@ -19,5 +19,6 @@
   autosetuprebase = always
 [branch "master"]
   rebase = true
+	pushRemote = no_push
 [core]
 	excludesfile = ~/.gitignore
