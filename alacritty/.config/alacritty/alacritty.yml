@@ -1,0 +1,63 @@
+window:
+  padding:
+    x: 2
+    y: 2
+  dynamic_padding: false
+
+  # Spread additional padding evenly around the terminal content.
+
+font:
+  size: 8
+
+colors:
+ # Default Colors
+ primary:
+   background: '#212121'
+   foreground: '#f1f1f1'
+ # Normal colors
+ normal:
+   black:   '#212121'
+   red:     '#c30771'
+   green:   '#10a778'
+   yellow:  '#a89c14'
+   blue:    '#008ec4'
+   magenta: '#523c79'
+   cyan:    '#20a5ba'
+   white:   '#f1f1f1'
+ # Bright colors
+ bright:
+   black:   '#424242'
+   red:     '#e32791'
+   green:   '#5fd7a7'
+   yellow:  '#f3e430'
+   blue:    '#b6d6fd'
+   magenta: '#6855de'
+   cyan:    '#4fb8cc'
+   white:   '#ffffff'
+
+ cursor:
+   text: '#f3f3f3'
+   cursor: '#aa45aa'
+
+scrolling:
+  # How many lines of scrollback to keep,
+  # '0' will disable scrolling.
+  history: 10000
+
+  # Number of lines the viewport will move for every line
+  # scrolled when scrollback is enabled (history > 0).
+  multiplier: 3
+
+  # Faux Scrolling
+  #
+  # The `faux_multiplier` setting controls the number
+  # of lines the terminal should scroll when the alternate
+  # screen buffer is active. This is used to allow mouse
+  # scrolling for applications like `man`.
+  #
+  # To disable this completely, set `faux_multiplier` to 0.
+  faux_multiplier: 3
+
+  # Automatically scroll to the bottom when new text is written
+  # to the terminal.
+  auto_scroll: false
