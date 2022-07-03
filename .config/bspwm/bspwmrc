@@ -43,9 +43,7 @@ bspc rule -a Yad state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
-
 # Autostart
-
 pgrep -x sxhkd > /dev/null || sxhkd &
 
 # Monitor layout
