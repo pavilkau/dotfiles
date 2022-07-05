@@ -12,12 +12,6 @@ eval "$(rbenv init -)"
 export PATH="$HOME/.nodenv/bin:$PATH"
 eval "$(nodenv init -)"
 
-# runcount=$(ps -ef | grep "ssh-agent" | grep -v "grep" | wc -l)
-# if [ $runcount -eq 0 ]; then
-#     eval $(ssh-agent -s) > /dev/null 2>&1
-#     ssh-add ~/.ssh/id_rsa
-# fi
-
 ZSH_THEME="simple"
 
 plugins=(git)
@@ -37,13 +31,9 @@ alias cfg="cd ~/.config"
 alias g="git"
 alias b="cd .."
 
-# config bare repo git alias
-alias gdot='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
 source $ZSH/oh-my-zsh.sh
 
 SSH_ENV="$HOME/.ssh/agent-environment"
-
 function start_agent {
     echo "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
@@ -54,7 +44,6 @@ function start_agent {
 }
 
 # Source SSH settings, if applicable
-
 if [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
     #ps ${SSH_AGENT_PID} doesn't work under cywgin
