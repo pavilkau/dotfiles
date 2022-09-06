@@ -166,6 +166,9 @@ nnoremap <leader>{ ciw{<C-R>"}<ESC>
 vnoremap <leader>} c{ <C-R>" }<ESC>
 vnoremap <leader>{ c{<C-R>"}<ESC>
 
+" yank file path
+nnoremap <silent> <leader>cf :let @+=expand("%")<CR>
+
 nnoremap <silent> <C-q> :call CloseWindowOrKillBuffer()<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 let g:rooter_patterns = ['.git', '!^engines', 'app', 'Makefile', 'nvim']
@@ -175,6 +178,8 @@ let g:fzf_action = {
 
 let g:fzf_layout = { 'down': '~40%' }
 
+" Complete coc suggestion
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 " Set specific linters
 let g:ale_linters = {}
