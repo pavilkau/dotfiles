@@ -1,26 +1,71 @@
 #! /bin/sh
 
 # Set topbar
-monitor_list=$(xrandr --query | grep " connected" | cut -d" " -f1)
-monitor_count=$(echo $monitor_list | wc -l)
-for m in $monitor_list; do
-  if [ $m == 'eDP1' ]; then
-    if [ $monitor_count == 1 ]; then
-      bspc monitor -f eDP1
-      bspc monitor eDP1 -d I II III IV V VI VII VIII IX X
-    fi
-  else
-    bspc monitor $m -d I II III IV V VI VII VIII IX
+INTERNAL_MONITOR='eDP1'
+EXTERNAL_MONITOR='DP3-8'
+
+# on first load setup default workspaces
+if [[ $(xrandr -q | grep "${EXTERNAL_MONITOR} connected") ]]; then
+  bspc monitor "$EXTERNAL_MONITOR" -d I II III IV V VI VII VIII IX
+  bspc monitor "$INTERNAL_MONITOR" -d X
+  bspc wm -O "$EXTERNAL_MONITOR" "$INTERNAL_MONITOR"
+else
+  bspc monitor "$INTERNAL_MONITOR" -d I II III IV V VI VII VIII IX X
+fi
+
+monitor_add() {
+  # Move first 5 desktops to external monitor
+  for desktop in $(bspc query -D --names -m "$INTERNAL_MONITOR" | sed 9q); do
+    bspc desktop "$desktop" --to-monitor "$EXTERNAL_MONITOR"
+  done
+
+  # Remove default desktop created by bspwm
+  bspc desktop Desktop --remove
+
+  # reorder monitors
+  bspc wm -O "$EXTERNAL_MONITOR" "$INTERNAL_MONITOR"
+}
+
+monitor_remove() {
+  # Add default temp desktop because a minimum of one desktop is required per monitor
+  bspc monitor "$EXTERNAL_MONITOR" -a Desktop
+
+  # Move all desktops except the last default desktop to internal monitor
+  for desktop in $(bspc query -D -m "$EXTERNAL_MONITOR");	do
+    bspc desktop "$desktop" --to-monitor "$INTERNAL_MONITOR"
+  done
+
+  # delete default desktops
+  bspc desktop Desktop --remove
+
+  # reorder desktops
+  bspc monitor "$INTERNAL_MONITOR" -o I II III IV V VI VII VIII IX X
+}
+
+
+if [[ $(xrandr -q | grep "${EXTERNAL_MONITOR} connected") ]]; then
+  # set xrandr rules for docked setup
+  sh ~/.screenlayout/multi_monitor.sh
+  if [[ $(bspc query -D -m "${EXTERNAL_MONITOR}" | wc -l) -ne 9 ]]; then
+    monitor_add
   fi
-done
+  bspc wm -O "$EXTERNAL_MONITOR" "$INTERNAL_MONITOR"
+else
+  # set xrandr rules for mobile setup
+  sh ~/.screenlayout/single_monitor.sh
+  if [[ $(bspc query -D -m "${INTERNAL_MONITOR}" | wc -l) -ne 10 ]]; then
+    monitor_remove
+  fi
+fi
+
 
 bspc config borderless_monocle   true
 bspc config gapless_monocle      true
 bspc config pointer_follows_focus true
 bspc config focus_follows_pointer false
-bspc config remove_disabled_monitors true
+# bspc config remove_disabled_monitors true
 bspc config remove_unplugged_monitors true
-bspc config merge_overlapping_monitors true
+# bspc config merge_overlapping_monitors true
 
 bspc config border_width         3
 bspc config window_gap          0
@@ -47,7 +92,7 @@ bspc rule -a Screenkey manage=off
 pgrep -x sxhkd > /dev/null || sxhkd &
 
 # Monitor layout
-sh ~/.screenlayout/monitor.sh &
+# 
 # Bar
 ~/.config/polybar/launch.sh &
 # Notifications
