@@ -58,7 +58,7 @@ set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set history=1000
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 set number relativenumber
 
 set autoread
@@ -88,6 +88,9 @@ nnoremap <silent> <leader>/ :nohlsearch<CR>
 
 imap jk <Esc>
 imap kj <Esc>
+
+map :W :w
+map :a :A
 
 " Del all buffers but current
 map <leader>o :%bd\|e\|bd#<cr>
