@@ -3,16 +3,18 @@
 ###########################################
 # MONITOR CONFIG
 
-INTERNAL_MONITOR="eDP1"
+INTERNAL_MONITOR="eDP-1"
 EXTERNAL_MONITOR="$(xrandr -q | grep -w connected |\
   grep -v -w ${INTERNAL_MONITOR} | awk '{print $1}' | head -1)"
 
 # on first load setup default workspaces
-if [[ $(xrandr -q | grep "${EXTERNAL_MONITOR} connected") ]]; then
+if [[ $(xrandr -q | grep -w "${EXTERNAL_MONITOR} connected") ]]; then
+  source ~/.screenlayout/${EXTERNAL_MONITOR}.sh
   bspc monitor "$EXTERNAL_MONITOR" -d I II III IV V VI VII VIII IX
   bspc monitor "$INTERNAL_MONITOR" -d X
   # bspc wm -O "$INTERNAL_MONITOR" "$EXTERNAL_MONITOR"
 else
+  source ~/.screenlayout/${INTERNAL_MONITOR}.sh
   bspc monitor "$INTERNAL_MONITOR" -d I II III IV V VI VII VIII IX X
 fi
 
@@ -23,13 +25,13 @@ bspc config pointer_follows_focus true
 bspc config focus_follows_pointer false
 
 # bspc config remove_disabled_monitors true
-# bspc config remove_unplugged_monitors true
+bspc config remove_unplugged_monitors true
 # bspc config merge_overlapping_monitors true
 
-bspc config border_width         4
-bspc config window_gap          4
-bspc config split_ratio          0.52
-bspc config top_padding 28
+bspc config border_width                4
+bspc config window_gap                  4
+bspc config split_ratio                 0.52
+bspc config top_padding                 28
 
 bspc config focused_border_color        "#F8B637"
 bspc config normal_border_color         "#444444"
