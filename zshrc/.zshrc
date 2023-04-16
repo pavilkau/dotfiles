@@ -12,6 +12,7 @@ eval "$(rbenv init -)"
 export PATH="$HOME/.nodenv/bin:$PATH"
 eval "$(nodenv init -)"
 
+MONITOR_NAME="eDP-1"
 ZSH_THEME="simple"
 
 plugins=(git)

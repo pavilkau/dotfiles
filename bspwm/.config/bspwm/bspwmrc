@@ -1,16 +1,19 @@
 #! /bin/sh
+#
+source ~/.zshrc
 
 ###########################################
 # MONITOR CONFIG
-INTERNAL_MONITOR='eDP1'
+
+INTERNAL_MONITOR="${MONITOR_NAME:-eDP1}"
 EXTERNAL_MONITOR="$(xrandr -q | grep -w connected |\
-  grep -v -w ${INTERNAL_MONITOR} | awk '{print $1}') | head -1"
+  grep -v -w ${INTERNAL_MONITOR} | awk '{print $1}' | head -1)"
 
 # on first load setup default workspaces
 if [[ $(xrandr -q | grep "${EXTERNAL_MONITOR} connected") ]]; then
-  bspc monitor "$EXTERNAL_MONITOR" -d I
-  bspc monitor "$INTERNAL_MONITOR" -d II III IV V VI VII VIII IX X
-  bspc wm -O "$INTERNAL_MONITOR" "$EXTERNAL_MONITOR"
+  bspc monitor "$EXTERNAL_MONITOR" -d I II III IV V VI VII VIII IX
+  bspc monitor "$INTERNAL_MONITOR" -d X
+  # bspc wm -O "$INTERNAL_MONITOR" "$EXTERNAL_MONITOR"
 else
   bspc monitor "$INTERNAL_MONITOR" -d I II III IV V VI VII VIII IX X
 fi
@@ -22,7 +25,7 @@ bspc config pointer_follows_focus true
 bspc config focus_follows_pointer false
 
 # bspc config remove_disabled_monitors true
-bspc config remove_unplugged_monitors true
+# bspc config remove_unplugged_monitors true
 # bspc config merge_overlapping_monitors true
 
 bspc config border_width         3
