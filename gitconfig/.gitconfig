@@ -2,12 +2,15 @@
 	name = Paulius Vilkauskas
 	email = 18093506+pavilkau@users.noreply.github.com
 [alias]
-  p = pull
+  pl = pull
+  ps = push
 	st = status
 	co = checkout
-  coma = checkout master
+	cb = checkout -b
+	coma = checkout master
 	br = branch
 	cm = commit -m	
+  cmpv = commit -m 'Bump patch version'
 	pf = push --force-with-lease
 	pushup = push -u origin HEAD
 	amend = commit --amend
