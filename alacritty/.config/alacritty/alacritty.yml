@@ -7,7 +7,7 @@ window:
   # Spread additional padding evenly around the terminal content.
 
 font:
-  size: 8
+  size: 13
 
 colors:
  # Default Colors
@@ -36,8 +36,8 @@ colors:
    white:   '#ffffff'
 
  cursor:
-   text: '#f3f3f3'
-   cursor: '#aa45aa'
+   text: '#000000'
+   cursor: '#00ddff'
 
 scrolling:
   # How many lines of scrollback to keep,
