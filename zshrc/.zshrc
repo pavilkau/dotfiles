@@ -48,3 +48,8 @@ else
 fi
 
 source $DOTFILES_PATH/work_cfg/zshrc.sh
+. "$HOME/.asdf/asdf.sh"
+
+function kill_spring () {
+	ps aux | grep spring | grep -v 'grep' | awk '{print $2}' | xargs kill -9
+}
