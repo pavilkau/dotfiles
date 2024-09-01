@@ -20,14 +20,13 @@ Plug 'mswift42/vim-themes'
 Plug 'tomtom/tcomment_vim'
 Plug 'kassio/neoterm'
 Plug 'dense-analysis/ale'
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'bodymindarts/vim-twitch'
 
 " Navigation
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'theprimeagen/harpoon'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -37,7 +36,6 @@ Plug 'airblade/vim-gitgutter'
 " Ruby
 Plug 'mark-maxwell/vim-spec-split'
 Plug 'tpope/vim-endwise'
-" Plug 'RRethy/nvim-treesitter-endwise'
 Plug 'airblade/vim-rooter'
 Plug 'vim-test/vim-test'
 Plug 'tpope/vim-rails'
@@ -72,8 +70,7 @@ call plug#end()
 " let g:seoul256_background = 254
 set background=dark
 
-colorscheme kanagawa
-" colorscheme gruvbox
+colorscheme gruvbox
 " Color
 syntax on
 set termguicolors
@@ -84,12 +81,14 @@ set termguicolors
 " highlight GitGutterChange guibg=#3b3b3b guifg=#bbbb00 ctermfg=3
 " highlight GitGutterDelete guibg=#3b3b3b guifg=#ff1111 ctermfg=9
 hi Visual term=reverse cterm=reverse guibg=#005544
-highlight CursorLineNr ctermfg=Red
+highlight CursorLineNr ctermfg=Red guifg=#aaaa55
+set cursorline
+set cursorlineopt=number
 highlight SignColumn ctermbg=none
 highlight GitGutterAdd    guifg=#00aa00 ctermfg=40
 highlight GitGutterChange guifg=#bbbb00 ctermfg=3
 highlight GitGutterDelete guifg=#ff1111 ctermfg=9
-highlight ColorColumn ctermbg=darkgrey guibg=#666666
+highlight ColorColumn ctermfg=Red guifg=#ffffff guibg=#99aa99
 
 " Change embedded terminal colors
 let g:terminal_color_0  = '#2e3436'
@@ -218,8 +217,8 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 
 " Search binds
-nnoremap <Leader>, :GFiles<CR>
-nnoremap <Leader>; :Files<CR>
+nnoremap <Leader>, :Files<CR>
+nnoremap <Leader>; :GFiles<CR>
 nnoremap <Leader>r :Rg<CR>
 
 let g:fzf_action = {
@@ -255,6 +254,9 @@ let g:ale_lint_on_save = 1
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 
+" Twitch spec switching
+nnoremap <silent> <C-s> :Twitch<CR>
+
 
 " Rails testing config
 autocmd BufLeave term://* stopinsert
@@ -262,6 +264,8 @@ nmap <silent> <Leader>tl :TestNearest<CR>
 nmap <silent> <Leader>tf :TestFile<CR>
 nmap <silent> <Leader>ta :TestSuite<CR>
 nmap <silent> <Leader>tr :TestLast<CR>
+
+au BufNewFile,BufRead Jenkinsfile setf groovy
 
 
 " Rooter
@@ -315,6 +319,7 @@ nvim_lsp.solargraph.setup {
   root_dir = nvim_lsp.util.root_pattern("Gemfile", ".git", "."),
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts),
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts),
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references),
   settings = {
     solargraph = {
       autoformat = true,
@@ -330,65 +335,14 @@ nvim_lsp.solargraph.setup {
 EOF
 
 
-
-" Harpoon
-lua <<EOF
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-
-vim.keymap.set("n", "<leader>m", mark.add_file)
-vim.keymap.set("n", "<C-m>", ui.toggle_quick_menu)
-
-vim.keymap.set("n", "'q", function() ui.nav_file(1) end)
-vim.keymap.set("n", "'w", function() ui.nav_file(2) end)
-vim.keymap.set("n", "'e", function() ui.nav_file(3) end)
-vim.keymap.set("n", "'r", function() ui.nav_file(4) end)
-EOF
-
-
-" treesitter
-" lua << EOF
-" require'nvim-treesitter.configs'.setup {
-"   -- A list of parser names, or "all" (the five listed parsers should always be installed)
-"   ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "ruby", "go" },
-"
-"   -- Install parsers synchronously (only applied to `ensure_installed`)
-"   sync_install = false,
-"
-"   -- Automatically install missing parsers when entering buffer
-"   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-"   auto_install = true,
-"
-"   -- List of parsers to ignore installing (or "all")
-"   ignore_install = { "javascript" },
-"
-"   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-"   -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-"
-"   highlight = {
-"     enable = true,
-"     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-"     -- Using this option may slow down your editor, and you may see some duplicate highlights.
-"     -- Instead of true it can also be a list of languages
-"     additional_vim_regex_highlighting = false,
-"   },
-" }
-" EOF
-
-
 " Cmp
 lua <<EOF
--- Set up nvim-cmp.
-local cmp = require'cmp'
+local cmp = require('cmp')
 
 cmp.setup({
 snippet = {
-  -- REQUIRED - you must specify a snippet engine
   expand = function(args)
   vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-  -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-  -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-  -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
   end,
 },
 window = {
@@ -396,18 +350,16 @@ window = {
   -- documentation = cmp.config.window.bordered(),
 },
 mapping = cmp.mapping.preset.insert({
+['<CR>'] = cmp.config.disable,
 ['<C-b>'] = cmp.mapping.scroll_docs(-4),
 ['<C-f>'] = cmp.mapping.scroll_docs(4),
 ['<C-Space>'] = cmp.mapping.complete(),
 ['<C-e>'] = cmp.mapping.abort(),
-['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+['<C-y>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 }),
 sources = cmp.config.sources({
 { name = 'nvim_lsp' },
 { name = 'vsnip' }, -- For vsnip users.
--- { name = 'luasnip' }, -- For luasnip users.
--- { name = 'ultisnips' }, -- For ultisnips users.
--- { name = 'snippy' }, -- For snippy users.
 }, {
   { name = 'buffer' },
 })
@@ -448,17 +400,8 @@ require('lspconfig')['solargraph'].setup {
 }
 EOF
 
-" lua <<EOF
-" require('nvim-treesitter.configs').setup {
-"   endwise = {
-"     enable = true,
-"   },
-" }
-" EOF
-
 
 " Fugitive
-
 nmap <leader>gb :Git blame<CR>
 nmap <leader>gs :G<CR>
 nmap <leader>gh :diffget //2<CR>
