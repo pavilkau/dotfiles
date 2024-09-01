@@ -5,14 +5,12 @@ export DOTFILES_PATH="$HOME/.dotfiles"
 export ZSH="$HOME/.oh-my-zsh"
 export ZSHRC_HOME="$DOTFILES_PATH/zshrc"
 export CONFIG_PATH="$HOME/.config"
-export LIBRARY_PATH="${LD_LIBRARY_PATH:+LD_LIBRARY_PATH:}/usr/local/opt/openssl/lib/"
 export VIMCONF_PATH="$HOME/.config/nvim/init.vim"
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-export PATH="$HOME/tools:$PATH"
-eval "$(rbenv init -)"
-
 ZSH_THEME="simple"
+source $DOTFILES_PATH/work_cfg/zshrc.sh
+source $ZSH/oh-my-zsh.sh
+
 
 plugins=(git)
 
@@ -25,7 +23,11 @@ alias cwm="nvim $CONFIG_PATH/bspwm/bspwmrc"
 alias cfg="cd ~/.config"
 alias g="git"
 
-source $ZSH/oh-my-zsh.sh
+alias k="kubectl"
+function kcons () {
+  kubectl exec $1 -it -- /bin/bash
+}
+
 
 SSH_ENV="$HOME/.ssh/agent-environment"
 function start_agent {
@@ -47,9 +49,7 @@ else
     start_agent;
 fi
 
-source $DOTFILES_PATH/work_cfg/zshrc.sh
-. "$HOME/.asdf/asdf.sh"
+fzf_to_vim () { fzf <"$TTY" | xargs -o nvim }
+zle -N fzf_to_vim{,}
+bindkey '^t' fzf_to_vim
 
-function kill_spring () {
-	ps aux | grep spring | grep -v 'grep' | awk '{print $2}' | xargs kill -9
-}
