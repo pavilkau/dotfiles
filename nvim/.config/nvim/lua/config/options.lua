@@ -8,7 +8,7 @@ o.number         = true -- enable line number
 o.relativenumber = true -- enable relative line number
 
 o.cursorline     = true -- enable cursor line
-o.cursorlineopt= "number"
+-- o.cursorlineopt= "number"
 
 o.joinspaces = false
 
@@ -19,7 +19,7 @@ o.hlsearch       = true -- highlight matching search
 o.ignorecase     = true -- case insensitive on search..
 o.smartcase      = true -- ..unless there's a capital
 o.equalalways    = true -- make window size always equal
-o.list           = true -- display listchars
+-- o.list           = true -- display listchars
 o.autoindent     = true -- enable autoindent
 o.autoread       = true
 o.smartindent    = false -- smarter indentation

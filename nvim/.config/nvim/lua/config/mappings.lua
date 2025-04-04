@@ -5,10 +5,6 @@ vim.g.mapleader = " "
 -- Close window
 k.set("n", "<C-q>", ":q<CR>")
 
--- Bind netrw
-k.set("n", "<Leader>n", "<cmd>Vex<CR>")
-k.set("n", "<Leader>m", "<cmd>Ex<CR>")
-
 -- Search in file
 k.set("n", "<Leader>s", ":s//g<Left><Left>")
 k.set("n", "<Leader><S-s>", ":%s//gc<Left><Left><Left>")

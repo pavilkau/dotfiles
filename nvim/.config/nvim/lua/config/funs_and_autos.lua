@@ -39,6 +39,13 @@ autocmd WinLeave * set colorcolumn=0
 augroup END
 ]]
 
+vim.cmd [[augroup CursorLine
+    au!
+    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    au WinLeave * setlocal nocursorline
+augroup END
+]]
+
 -- Open file on github
 vim.cmd [[
 noremap <silent> <leader>gB V:<c-u>call OpenCurrentFileInGithub()<cr>
@@ -58,3 +65,27 @@ function! OpenCurrentFileInGithub()
   call system('open ' . url)
 endfunction
 ]]
+
+vim.cmd [[
+noremap <silent> <leader>gN V:<c-u>call OpenNewPrInGithub()<cr>
+xnoremap <silent> <leader>gN :<c-u>call OpenNewPrInGithub()<cr>
+
+function! OpenNewPrInGithub()
+  let file_dir = expand('%:h')
+  let git_remote = system('cd ' . file_dir . '; git remote get-url origin')
+  let branch_name = system("git branch --show-current 2> /dev/null | tr -d '\n'")
+  let repo_path = matchlist(git_remote, ':\(.*\)\.')[1]
+
+  let url = 'https://github.com/' . repo_path . '/compare' . '/' . branch_name . '\?expand=1'
+  call system('open ' . url)
+endfunction
+]]
+
+local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+   require('go.format').goimports()
+  end,
+  group = format_sync_grp,
+})

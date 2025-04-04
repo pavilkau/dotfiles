@@ -1,26 +1,43 @@
 return {
   {
-    "rose-pine/neovim",
-    name = "rose-pine",
+    "ramojus/mellifluous.nvim",
     config = function()
-      require("rose-pine").setup {
-        variant = "moon",
-        highlight_groups = {
-          SignColumn = { fg = "muted", bg = "surface" },
-          FoldColumn = { fg = "muted", bg = "surface" },
-          LineNr = { fg = "muted", bg = "surface" },
-          CursorLineNr = { fg = "yellow", bg = "surface" },
-          CursorLineFold = { bg = "surface" },
-        }
-      }
-      -- vim.cmd.colorscheme("rose-pine")
+      require("mellifluous").setup({
+        colorset = "mountain"
+
+      })
+      -- vim.cmd("colorscheme mellifluous")
     end
   },
   {
-    "rebelot/kanagawa.nvim",
-    name = "kanagawa",
+    'AlessandroYorba/Alduin',
     config = function()
-      vim.cmd("colorscheme kanagawa")
+      -- vim.cmd("colorscheme alduin")
     end
   },
+  {
+    "water-sucks/darkrose.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- vim.cmd("colorscheme darkrose")
+    end
+  },
+  {
+    'morhetz/gruvbox',
+    config = function()
+      vim.g.gruvbox_contrast_dark = 'hard'
+      vim.g.gruvbox_contrast_light = 'soft'
+      -- vim.o.background='light'
+      -- vim.cmd("colorscheme gruvbox")
+    end
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme catppuccin")
+    end
+  }
 }

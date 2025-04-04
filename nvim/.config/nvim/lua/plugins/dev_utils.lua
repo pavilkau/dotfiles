@@ -53,10 +53,17 @@ return {
 
       g.ale_linters = {
         ruby = {'rubocop', 'ruby'},
+        go = {'gopls'},
       }
     end
   },
   {
     'airblade/vim-gitgutter'
+  },
+  {
+    'github/copilot.vim',
+    config = function()
+      vim.keymap.set("i", "<C-c>", [[<Plug>(copilot-dismiss)<C-C>]], { desc = "Dismiss copilot when exiting insert" })
+    end
   }
 }
