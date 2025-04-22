@@ -47,3 +47,8 @@ opacity = 0.9
 [window.padding]
 x = 2
 y = 2
+
+[keyboard]
+bindings = [
+  { key = "Key6", mods = "Control", chars = "\u001e" }
+]
