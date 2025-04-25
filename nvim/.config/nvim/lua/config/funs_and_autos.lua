@@ -89,3 +89,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
   group = format_sync_grp,
 })
+
+-- Split args in parentheses into new lines
+vim.cmd [[
+noremap <silent> <leader>gS ^f(li<CR><Esc>:s/, /,\r/g<CR>f)i<CR><Esc>V%=
+]]
+
+-- Close quickfix window after <CR>
+vim.api.nvim_create_autocmd(
+  "FileType", {
+  pattern={"qf"},
+  command=[[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
