@@ -18,7 +18,7 @@ return {
     lazy = false,
     opts = {
       automatic_installation = true,
-      ensure_installed = { "lua_ls", "ruby_lsp" },
+      ensure_installed = { "lua_ls", "ruby_lsp", "gopls" },
     },
   },
   {
@@ -31,8 +31,8 @@ return {
         opts.buffer = bufnr
         vim.lsp.inlay_hint.enable()
 
-        -- opts.desc = "Show documentation for what is under cursor"
-        -- vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        opts.desc = "Show documentation for what is under cursor"
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
         -- opts.desc = "Show line diagnostics"
         -- vim.keymap.set("n", "<C-W>d", vim.diagnostic.open_float, opts)
@@ -42,6 +42,8 @@ return {
 
         -- opts.desc = "Go to next diagnostic"
         -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+
+        vim.keymap.set("n","gD", vim.lsp.buf.declaration, opts)
 
         opts.desc = "Go to definition"
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -64,14 +66,27 @@ return {
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       local lspconfig = require("lspconfig")
-      lspconfig.gopls.setup{}
-      lspconfig.solargraph.setup({
+      lspconfig.gopls.setup{
         capabilities = capabilities,
         on_attach = on_attach,
-        handlers = {
-          ['textDocument/publishDiagnostics'] = function(...) end
-        },
-      })
+        cmd = { "gopls" },
+        filetypes = { "go", "gomod" },
+        root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+      }
+      lspconfig.ruby_lsp.setup{
+        capabilities = capabilities,
+        on_attach = on_attach,
+        cmd = { "ruby-lsp" },
+        filetypes = { "ruby" },
+        root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
+      }
+      -- lspconfig.solargraph.setup({
+      --   capabilities = capabilities,
+      --   on_attach = on_attach,
+      --   handlers = {
+      --     ['textDocument/publishDiagnostics'] = function(...) end
+      --   },
+      -- })
     end,
   },
 }
