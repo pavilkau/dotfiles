@@ -31,6 +31,13 @@ return {
         opts.buffer = bufnr
         vim.lsp.inlay_hint.enable()
 
+        -- -- Disable diagnostics and formatting from ruby-lsp so RuboCop runs separately
+        -- if client.name == "ruby_lsp" then
+        --   client.handlers["textDocument/publishDiagnostics"] = function() end
+        --   client.server_capabilities.documentFormattingProvider = false
+        --   client.server_capabilities.documentRangeFormattingProvider = false
+        -- end
+
         opts.desc = "Show documentation for what is under cursor"
         vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
@@ -76,17 +83,56 @@ return {
       lspconfig.ruby_lsp.setup{
         capabilities = capabilities,
         on_attach = on_attach,
-        cmd = { "ruby-lsp" },
+        init_options = {
+          formatting = true,
+          enabled_features = {
+            "documentSymbols",
+            "documentLink",
+            "hover",
+            "foldingRanges",
+            "selectionRanges",
+            "semanticHighlighting",
+            "formatting",
+            "onTypeFormatting",
+            "diagnostics",
+            "codeActions",
+            "documentHighlights",
+            "inlayHint",
+            "completion",
+            "codeLens",
+            "definition",
+            "workspaceSymbol",
+            "signatureHelp",
+          }
+        },
+
+      -- Script to exec ruby-lsp via mise
+      -- #!/bin/bash
+      -- set -e  # Exit immediately if a command exits with a non-zero status
+      --
+      -- # Install the ruby-lsp gem
+      -- mise exec -- gem install ruby-lsp
+      --
+      -- # Start the ruby-lsp language server
+      -- exec mise exec -- ruby-lsp
+        cmd = { vim.fn.expand("~/scripts/init_ruby_lsp.sh") },
         filetypes = { "ruby" },
-        root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
+        root_dir = lspconfig.util.root_pattern("Gemfile.lock", ".git"),
+        settings = {},
       }
-      -- lspconfig.solargraph.setup({
+
+      -- Use RuboCop LSP for diagnostics/formatting independently of ruby-lsp
+      -- lspconfig.rubocop.setup{
       --   capabilities = capabilities,
       --   on_attach = on_attach,
-      --   handlers = {
-      --     ['textDocument/publishDiagnostics'] = function(...) end
-      --   },
-      -- })
+      --   cmd = { "bundle", "exec", "rubocop", "--lsp" },
+      --   filetypes = { "ruby" },
+      --   root_dir = lspconfig.util.root_pattern("Gemfile", ".git"),
+      --   on_new_config = function(new_config, root_dir)
+      --     new_config.cmd_env = new_config.cmd_env or {}
+      --     new_config.cmd_env.BUNDLE_GEMFILE = root_dir .. "/Gemfile"
+      --   end,
+      -- }
     end,
   },
 }
