@@ -5,10 +5,13 @@ export DOTFILES_PATH="$HOME/.dotfiles"
 export ZSH="$HOME/.oh-my-zsh"
 export ZSHRC_HOME="$DOTFILES_PATH/zshrc"
 export CONFIG_PATH="$HOME/.config"
-export VIMCONF_PATH="$HOME/.config/nvim/init.vim"
+export VIMCONF_PATH="$HOME/.config/nvim"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
 
 ZSH_THEME="simple"
 source $DOTFILES_PATH/work_cfg/zshrc.sh
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
 
 
@@ -17,11 +20,14 @@ plugins=(git)
 # Aliases
 alias v="nvim"
 alias zshrc="nvim ~/.zshrc"
-alias cvim="nvim $VIMCONF_PATH"
+alias cvim="cd $VIMCONF_PATH; nvim"
 alias cwm="nvim $CONFIG_PATH/bspwm/bspwmrc"
 
 alias cfg="cd ~/.config"
 alias g="git"
+
+alias ts='cd "$(~/scripts/tmux-windowizer)"'
+alias tw='cd "$(~/scripts/worktree-pick)"'
 
 alias k="kubectl"
 function kcons () {
@@ -36,7 +42,8 @@ function start_agent {
     echo succeeded
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add;
+    /usr/bin/ssh-add
+    /usr/bin/ssh-add ~/.ssh/git/git_signing;
 }
 
 # Source SSH settings, if applicable
@@ -53,3 +60,6 @@ fzf_to_vim () { fzf <"$TTY" | xargs -o nvim }
 zle -N fzf_to_vim{,}
 bindkey '^t' fzf_to_vim
 
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"

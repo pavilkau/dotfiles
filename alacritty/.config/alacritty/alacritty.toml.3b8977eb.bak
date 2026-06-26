@@ -33,7 +33,7 @@ shape = "Block"
 blinking = "Always"
 
 [font]
-size = 16
+size = 13
 
 [scrolling]
 history = 10000
@@ -50,6 +50,5 @@ y = 2
 
 [keyboard]
 bindings = [
-  { key = "Key6", mods = "Control", chars = "\u001e" },
-  { key = "Return", mods = "Shift", chars = "\u001b\r" }
+  { key = "Key6", mods = "Control", chars = "\u001e" }
 ]
